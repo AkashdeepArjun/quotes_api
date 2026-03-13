@@ -4,7 +4,7 @@ const {addQuote,getQuotes,deleteQuote,updateQuote} = require("../controllers/quo
 const { verifyToken } = require("../middleware/authMiddleware");
 
 router.post("/",verifyToken,addQuote);
-router.get("/",getQuotes);
+router.get("/",verifyToken,getQuotes);
 router.delete("/:id",verifyToken,deleteQuote);
 router.put("/:id",verifyToken,updateQuote);
 module.exports = router;

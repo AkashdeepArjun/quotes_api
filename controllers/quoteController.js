@@ -2,7 +2,11 @@ const db = require("../config/db");
 
 exports.addQuote = (req,res) =>{
 
+    console.log(" REQUEST BODY IS ", req.body);
+
     const {quote} = req.body;
+
+
 
     const user_id = req.user.id;
 
@@ -21,16 +25,52 @@ exports.addQuote = (req,res) =>{
 
 exports.getQuotes = (req,res) =>{
 
-    const q = "SELECT * From quotes ";
+    const dataset_size_query = "SELECT COUNT(*) as total  FROM quotes";
 
-    db.query(q,(err,rslt) => {
+    let dataset_size=0;
+
+    console.log("REQUEST QUERY IS ",req.query);
+
+    const url_search  = req.query.search;
+
+    const page = parseInt(req.query.page) || 1;
+
+    const limit = parseInt(req.query.limit) || 10;
+
+    const offset = (page -1 ) * limit;
+
+    var q = "SELECT * From quotes LIMIT ? OFFSET ? ";
+
+    var v = [limit,offset];
+
+
+    if(url_search){
+
+        q="SELECT * from quotes WHERE quote LIKE ? LIMIT ? OFFSET ?";
+        
+        v=[`%${url_search}%`,limit,offset];
+
+    }
+
+    console.log("SEARCH PARAM  VALUE ",url_search);
+
+
+    db.query(dataset_size_query,[],(err,result)=>{
+
+        console.log("TOTAL SIZE IS ",result[0].total);
+        dataset_size =result[0].total;
+
+
+    });
+
+    db.query(q,v,(err,rslt) => {
 
         if(err){
          
             return res.status(500).json({error:err});
         }
 
-        res.json(rslt);
+        res.json({data:rslt,dataset_size:dataset_size});
 
 
 

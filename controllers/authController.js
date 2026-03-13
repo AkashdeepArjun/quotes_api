@@ -26,6 +26,7 @@ exports.registerUser = async ( req,res) =>{
         db.query(query,[username,email,hashed_password],(err,result)=>{
 
             if(err){
+                console.log("ERROR AA GYA",err);
                return  res.status(500).json({error:err});
             }
 
@@ -81,13 +82,17 @@ exports.loginUser= (req,res)=>{
         
         const token = jwt.sign({id:user.id,email:user.email},"keyUser",{expiresIn:"1h"});
 
-        res.json({message:"Login success",token:token})
+        res.json({message:"Login success",token:token});
 
 
 
     });
 
+}
 
+exports.logoutUser = (req,res) => {
+
+res.json({message:"logged out successfully "});
 
 
 }
