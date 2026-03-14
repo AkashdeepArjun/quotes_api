@@ -37,16 +37,20 @@ exports.getQuotes = (req,res) =>{
 
     const limit = parseInt(req.query.limit) || 10;
 
+    const sortBy = req.query.sortBy || "created_at";
+
+    const order = req.query.order || "DESC";
+
     const offset = (page -1 ) * limit;
 
-    var q = "SELECT * From quotes LIMIT ? OFFSET ? ";
+    var q = `SELECT * From quotes  ORDER BY ${sortBy} ${order}  LIMIT ? OFFSET ? `;
 
     var v = [limit,offset];
 
 
     if(url_search){
 
-        q="SELECT * from quotes WHERE quote LIKE ? LIMIT ? OFFSET ?";
+        q=`SELECT * from quotes WHERE quote LIKE ?  ORDER BY ${sortBy} ${order}  LIMIT ? OFFSET ? `;
         
         v=[`%${url_search}%`,limit,offset];
 
