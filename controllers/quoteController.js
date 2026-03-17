@@ -41,9 +41,27 @@ exports.getQuotes = (req,res) =>{
 
     const order = req.query.order || "DESC";
 
+    const startDate= req.query.startDate;
+
+    const endDate = req.query.endDate;
+
+
+    console.log(" START DATE FOUND :",startDate ," END DATE FOUND :",endDate);
+
     const offset = (page -1 ) * limit;
 
     var q = `SELECT * From quotes  ORDER BY ${sortBy} ${order}  LIMIT ? OFFSET ? `;
+
+
+    if(startDate && endDate){
+
+    
+    q = `SELECT * From quotes  WHERE DATE(created_at) BETWEEN '${startDate}' AND '${endDate}' ORDER BY ${sortBy} ${order}   LIMIT ? OFFSET ? `;
+
+
+    }
+
+
 
     var v = [limit,offset];
 
@@ -51,6 +69,18 @@ exports.getQuotes = (req,res) =>{
     if(url_search){
 
         q=`SELECT * from quotes WHERE quote LIKE ?  ORDER BY ${sortBy} ${order}  LIMIT ? OFFSET ? `;
+
+        if(startDate && endDate){
+
+
+        q=`SELECT * from quotes WHERE  quote LIKE ?  AND  DATE(created_at) BETWEEN '${startDate}' AND '${endDate}'  ORDER BY ${sortBy} ${order}  LIMIT ? OFFSET ? `;
+        
+
+
+
+        }
+
+
         
         v=[`%${url_search}%`,limit,offset];
 
@@ -74,6 +104,7 @@ exports.getQuotes = (req,res) =>{
             return res.status(500).json({error:err});
         }
 
+        console.log(" total DATA FOUND ",rslt);
         res.json({data:rslt,dataset_size:dataset_size});
 
 
