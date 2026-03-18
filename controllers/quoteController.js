@@ -46,7 +46,7 @@ exports.getQuotes = (req,res) =>{
     const endDate = req.query.endDate;
 
 
-    console.log(" START DATE FOUND :",startDate ," END DATE FOUND :",endDate);
+    // console.log(" START DATE FOUND :",startDate ," END DATE FOUND :",endDate);
 
     const offset = (page -1 ) * limit;
 
@@ -104,7 +104,7 @@ exports.getQuotes = (req,res) =>{
             return res.status(500).json({error:err});
         }
 
-        console.log(" total DATA FOUND ",rslt);
+        // console.log(" total DATA FOUND ",rslt);
         res.json({data:rslt,dataset_size:dataset_size});
 
 
