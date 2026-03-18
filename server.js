@@ -17,6 +17,20 @@ const auth_limiter  = rate_limit({
 });
 
 
+const api_limiter = rate_limit({
+
+    windowMs:15*60*1000,
+    max:8,
+    message:'too many CRUD CALLS please try again later'
+
+
+})
+
+
+
+
+
+
 require("dotenv").config();
 
 const app = express();
@@ -25,6 +39,7 @@ app.use(cors());
 
 app.use(express.json());
 
+app.use("/api",api_limiter);
 
 app.use("/api/auth",auth_limiter);
 
