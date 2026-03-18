@@ -11,7 +11,8 @@ const rate_limit = require('express-rate-limit');
 const auth_limiter  = rate_limit({
 
     windowMs:15*60*1000,
-    max:10
+    max:5,
+    message:' too many requests please try again later'
 
 });
 
